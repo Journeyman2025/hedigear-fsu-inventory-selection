@@ -1,0 +1,116 @@
+// hedigear-fsu-inventory-selection/public/data/inventory.json
+
+[
+  {
+    "Selection Options": "Included",
+    "Product Name": "Florida State University Letter Mark 3.75\"W x 1.6\"H",
+    "Product Type": "Patch",
+    "Category": "FSU Logo",
+    "URL": "https://hedigear.com/collections/college/products/fsu-letter-mark-3-75-w-x-1-625-h",
+    "Image": "/images/FSU-Letter-Mark.png"
+  },
+  {
+    "Selection Options": "Included",
+    "Product Name": "Florida State University Seminole Head Mark 3.6\"W x 3.7\"H",
+    "Product Type": "Patch",
+    "Category": "FSU Logo",
+    "URL": "https://hedigear.com/collections/college/products/florida-state-university-seminole-head-mark-3-625-w-x-3-7-h",
+    "Image": "/images/FSU-Seminole-Head.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Base Camp HEDi-PACK - Grey",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/base-camp?variant=42280201060545",
+    "Image": "/images/Base Camp HEDi-PACK - Grey.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Base Camp HEDi-PACK - Navy",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/base-camp?variant=42280201388225",
+    "Image": "/images/Base Camp HEDi-PACK - Navy.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Explorer HEDi-Pack - Grey",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/explorer-hedi-pack?variant=42280203026625",
+    "Image": "/images/Explorer HEDi-Pack - Grey.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Explorer HEDi-Pack - Blue Camo",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/explorer-hedi-pack?variant=42280202993857",
+    "Image": "/images/Explorer HEDi-Pack - Blue Camo.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Summit HEDi-PACK - Black",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/summit-hedi-pack-black",
+    "Image": "/images/Summit HEDi-PACK - Black.png"
+  },
+  {
+    "Selection Options": "Pick 1",
+    "Product Name": "Traveler Duffel HEDi-PACK - Black",
+    "Product Type": "HEDi-PACK",
+    "Category": "Backpack",
+    "URL": "https://hedigear.com/collections/backpacks/products/traveler-duffel-hedi-pack-black",
+    "Image": "/images/Traveler Duffel HEDi-PACK - Black.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "US Democrat Donkey Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/patch-usa-democrat-donkey",
+    "Image": "/images/US Democrat Donkey Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "US Marine Corps 3\" Round Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/us-navy-marine-corps-3-round-patch",
+    "Image": "/images/US Marine Corps 3 Round Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "US Navy Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/patch-us-navy",
+    "Image": "/images/US Navy Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "US Republican Elephant Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/patch-usa-republican-elephant",
+    "Image": "/images/US Republican Elephant Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "USA Black & Gray Patch (3.5 x 2)",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/patch-usa-blue",
+    "Image": "/images/USA Black & Gray Patch (3.5 x 2).png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "USA Hawaii Flag Name Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/usa-hawaii-flag-name-patch",
+    "Image": "/images/USA Hawaii Flag Name Patch.png"
+  }
+]
