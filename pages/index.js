@@ -1,221 +1,269 @@
-import { useState, useEffect } from 'react';
-import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
-import Head from 'next/head';
+import { useState } from 'react';
+import inventory from '../public/data/inventory.json';
 
-// This component is a direct adaptation of the working UF project's logic,
-// updated for FSU's selection rules and Tailwind CSS styling.
+function transformImageUrl(url) {
+  const match = url.match(/\/d\/([^/]+)/);
+  if (match) {
+    const id = match[1];
+    return `https://drive.google.com/uc?export=download&id=${id}`;
+  }
+  return url;
+}
 
 export default function Home() {
-  const [inventory, setInventory] = useState([]);
-  
-  // State for selections (mirrors the simple UF logic)
-  const [selectedBackpack, setSelectedBackpack] = useState(null);
-  const [selectedPatches, setSelectedPatches] = useState([]);
-  
-  // State for the form
-  const [formVisible, setFormVisible] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    shippingAddress: { street: '', apt: '', city: '', state: '', zip: '' },
-  });
+  // Partition items by selection option
+  const includedItems = inventory.filter(item => item.selectionOption === 'Included');
+  const pick1Items = inventory.filter(item => item.selectionOption === 'Pick 1');
+  const pick3Items = inventory.filter(item => item.selectionOption === 'Pick 3');
+  const pick2Items = inventory.filter(item => item.selectionOption === 'Pick 2');
 
-  // Fetch inventory data on component mount
-  useEffect(() => {
-    fetch('/data/inventory.json')
-      .then((res) => res.json())
-      .then((data) => setInventory(data))
-      .catch(err => console.error("Failed to fetch inventory:", err));
-  }, []);
+  // State for selection
+  const [selectedPick1, setSelectedPick1] = useState(null);
+  const [selectedPick3, setSelectedPick3] = useState([]);
+  const [selectedPick2, setSelectedPick2] = useState([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
 
-  // Filter inventory into the correct groups using the FSU data keys
-  const includedItems = inventory.filter(p => p['Selection Options'] === 'Included');
-  const backpackItems = inventory.filter(p => p['Selection Options'] === 'Pick 1');
-  const patchItems = inventory.filter(p => p['Selection Options'] === 'Pick 5');
-
-  // --- SELECTION HANDLERS (Directly adapted from UF logic) ---
-
-  const handleSelectBackpack = (item) => {
-    // UF logic allows toggling the backpack selection
-    if (selectedBackpack && selectedBackpack['Product Name'] === item['Product Name']) {
-      setSelectedBackpack(null);
+  const handleSelectPick1 = (item) => {
+    if (selectedPick1 && selectedPick1.productName === item.productName) {
+      setSelectedPick1(null);
     } else {
-      setSelectedBackpack(item);
+      setSelectedPick1(item);
     }
   };
 
-  const handleTogglePatches = (item) => {
-    const isSelected = selectedPatches.some(p => p['Product Name'] === item['Product Name']);
-    
-    if (isSelected) {
-      // If already selected, remove it
-      setSelectedPatches(selectedPatches.filter(p => p['Product Name'] !== item['Product Name']));
-    } else if (selectedPatches.length < campaignConfig.patchSelectionLimit) {
-      // If not selected and limit is not reached, add it
-      setSelectedPatches([...selectedPatches, item]);
-    }
-  };
-  
-  // --- FORM HANDLERS ---
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({ ...prev, [parent]: { ...prev[parent], [child]: value } }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+  const handleTogglePick3 = (item) => {
+    const exists = selectedPick3.some(i => i.productName === item.productName);
+    if (exists) {
+      setSelectedPick3(selectedPick3.filter(i => i.productName !== item.productName));
+    } else if (selectedPick3.length < 3) {
+      setSelectedPick3([...selectedPick3, item]);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmissionStatus('submitting');
-    
-    // The Notion API expects selectedPick1 and selectedPick2
-    const submissionData = {
-      ...formData,
-      selectedPick1: selectedBackpack,
-      selectedPick2: selectedPatches, 
+  const handleTogglePick2 = (item) => {
+    const exists = selectedPick2.some(i => i.productName === item.productName);
+    if (exists) {
+      setSelectedPick2(selectedPick2.filter(i => i.productName !== item.productName));
+    } else if (selectedPick2.length < 2) {
+      setSelectedPick2([...selectedPick2, item]);
+    }
+  };
+
+  const isPick3Selected = (item) => selectedPick3.some(i => i.productName === item.productName);
+  const isPick2Selected = (item) => selectedPick2.some(i => i.productName === item.productName);
+
+  const readyToSubmit = !!(
+    selectedPick1 &&
+    selectedPick3.length === 3 &&
+    selectedPick2.length === 2 &&
+    name.trim() &&
+    email.trim() &&
+    address.trim()
+  );
+
+  const handleSubmit = () => {
+    const submission = {
+      name,
+      email,
+      address,
       includedItems,
+      selectedPick1,
+      selectedPick3,
+      selectedPick2
     };
-
-    try {
-      const response = await fetch('/api/submit-to-notion', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submissionData),
-      });
-      if (response.ok) setSubmissionStatus('success');
-      else setSubmissionStatus('error');
-    } catch (error) {
-      console.error("Submission error:", error);
-      setSubmissionStatus('error');
-    }
+    alert(JSON.stringify(submission, null, 2));
   };
-
-  // Determine if the "Proceed" button should be enabled
-  const isSelectionComplete = selectedBackpack && selectedPatches.length === campaignConfig.patchSelectionLimit;
-
-  // --- RENDER LOGIC ---
-
-  if (submissionStatus === 'success') {
-    return (
-      <div className="text-center p-10">
-        <h2 className="text-3xl font-bold text-green-600 mb-4">Thank You!</h2>
-        <p className="text-lg">Your selections have been submitted successfully.</p>
-      </div>
-    );
-  }
 
   return (
-    <div>
-      <Head>
-        <title>{campaignConfig.title}</title>
-        <link rel="icon" href={campaignConfig.favicon} />
-      </Head>
-      <header className="bg-gray-800 text-white p-6 text-center">
-        <img src={campaignConfig.logo} alt="Campaign Logo" className="h-20 mx-auto mb-4" />
-        <h1 className="text-4xl font-extrabold">{campaignConfig.header}</h1>
-        <p className="text-lg mt-2">{campaignConfig.subheader}</p>
-      </header>
-      <main className="container mx-auto p-8">
-        {/* Included Items Section */}
-        <div className="mb-12">
-            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">Included with Your HEDi-PACK</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {includedItems.map((item) => (
-                    <div key={item['Product Name']} className="border rounded-lg p-4 text-center">
-                        <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
-                        <p className="text-sm font-semibold">{item['Product Name']}</p>
-                    </div>
-                ))}
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1 style={{ color: '#782F40' }}>FSU Athlete Inventory Selection</h1>
+      {/* Included items */}
+      <section style={{ marginBottom: '30px' }}>
+        <h2 style={{ color: '#782F40' }}>Included Items</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          {includedItems.map(item => (
+            <div key={item.productName} style={{ width: '150px', textAlign: 'center', border: '1px solid #CEB888', padding: '5px', borderRadius: '4px' }}>
+              <img
+                src={transformImageUrl(item.imageUrl)}
+                alt={item.productName}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/placeholder.png';
+                }}
+                style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+              />
+              <p style={{ marginTop: '5px', fontWeight: 'bold' }}>{item.productName}</p>
+              <p style={{ fontStyle: 'italic', color: '#555' }}>Included</p>
             </div>
+          ))}
         </div>
+      </section>
 
-        {/* Backpack Selection Section */}
-        <div className="mb-12">
-            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">Step 1: Choose Your HEDi-PACK (Pick 1)</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {backpackItems.map((item) => {
-                    const isSelected = selectedBackpack && selectedBackpack['Product Name'] === item['Product Name'];
-                    return (
-                        <div
-                            key={item['Product Name']}
-                            className={`border rounded-lg p-4 text-center transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
-                            onClick={() => handleSelectBackpack(item)}
-                        >
-                            <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
-                            <p className="text-sm font-semibold">{item['Product Name']}</p>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-
-        {/* Patch Selection Section */}
-        <div className="mb-12">
-            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{`Step 2: Choose Your Patches (${selectedPatches.length}/${campaignConfig.patchSelectionLimit})`}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {patchItems.map((item) => {
-                    const isSelected = selectedPatches.some(p => p['Product Name'] === item['Product Name']);
-                    const isDisabled = !isSelected && selectedPatches.length >= campaignConfig.patchSelectionLimit;
-                    return (
-                        <div
-                            key={item['Product Name']}
-                            className={`border rounded-lg p-4 text-center transition-all duration-200 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
-                            onClick={() => !isDisabled && handleTogglePatches(item)}
-                        >
-                            <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
-                            <p className="text-sm font-semibold">{item['Product Name']}</p>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-
-        {/* Form and Submission Section */}
-        {!formVisible && (
-          <div className="text-center my-8">
-            <button 
-              onClick={() => setFormVisible(true)}
-              className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-              disabled={!isSelectionComplete}
-            >
-              Proceed to Shipping
-            </button>
-          </div>
-        )}
-        {formVisible && (
-          <div className="max-w-2xl mx-auto mt-10 p-8 border rounded-lg shadow-xl">
-            <h2 className="text-2xl font-bold mb-6 text-center">Shipping Information</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input type="text" name="firstName" placeholder="First Name" className="p-2 border rounded" required onChange={handleInputChange} />
-                <input type="text" name="lastName" placeholder="Last Name" className="p-2 border rounded" required onChange={handleInputChange} />
-              </div>
-              <input type="email" name="email" placeholder="Email" className="w-full p-2 border rounded mb-4" required onChange={handleInputChange} />
-              <input type="text" name="shippingAddress.street" placeholder="Street Address" className="w-full p-2 border rounded mb-4" required onChange={handleInputChange} />
-              <input type="text" name="shippingAddress.apt" placeholder="Apt, Suite, etc. (optional)" className="w-full p-2 border rounded mb-4" onChange={handleInputChange} />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <input type="text" name="shippingAddress.city" placeholder="City" className="p-2 border rounded" required onChange={handleInputChange} />
-                <input type="text" name="shippingAddress.state" placeholder="State" className="p-2 border rounded" required onChange={handleInputChange} />
-                <input type="text" name="shippingAddress.zip" placeholder="ZIP Code" className="p-2 border rounded" required onChange={handleInputChange} />
-              </div>
-              <button 
-                type="submit" 
-                className="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
-                disabled={submissionStatus === 'submitting'}
+      {/* Pick 1 group */}
+      <section style={{ marginBottom: '30px' }}>
+        <h2 style={{ color: '#782F40' }}>Select 1 Bag</h2>
+        <p>Choose exactly one backpack.</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          {pick1Items.map(item => {
+            const selected = selectedPick1 && selectedPick1.productName === item.productName;
+            return (
+              <div
+                key={item.productName}
+                onClick={() => handleSelectPick1(item)}
+                style={{
+                  width: '150px',
+                  cursor: 'pointer',
+                  border: selected ? '2px solid #CEB888' : '1px solid #CEB888',
+                  borderRadius: '4px',
+                  padding: '5px',
+                  boxShadow: selected ? '0 0 6px #CEB88899' : 'none'
+                }}
               >
-                {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit My Selections'}
-              </button>
-              {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">There was an error submitting your form. Please try again.</p>}
-            </form>
-          </div>
+                <img
+                  src={transformImageUrl(item.imageUrl)}
+                  alt={item.productName}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/placeholder.png';
+                  }}
+                  style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                />
+                <p style={{ marginTop: '5px' }}>{item.productName}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p style={{ marginTop: '10px' }}>Selected: {selectedPick1 ? selectedPick1.productName : 'None'}</p>
+      </section>
+
+      {/* Pick 3 group */}
+      <section style={{ marginBottom: '30px' }}>
+        <h2 style={{ color: '#782F40' }}>Select 3 Bookstore Patches</h2>
+        <p>Pick exactly three patches from the Bookstore collection.</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          {pick3Items.map(item => {
+            const selected = isPick3Selected(item);
+            const disabled = !selected && selectedPick3.length >= 3;
+            return (
+              <div
+                key={item.productName}
+                onClick={() => !disabled && handleTogglePick3(item)}
+                style={{
+                  width: '150px',
+                  cursor: disabled ? 'default' : 'pointer',
+                  border: selected ? '2px solid #CEB888' : '1px solid #CEB888',
+                  borderRadius: '4px',
+                  padding: '5px',
+                  opacity: disabled && !selected ? 0.5 : 1
+                }}
+              >
+                <img
+                  src={transformImageUrl(item.imageUrl)}
+                  alt={item.productName}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/placeholder.png';
+                  }}
+                  style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                />
+                <p style={{ marginTop: '5px' }}>{item.productName}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p style={{ marginTop: '10px' }}>Selected ({selectedPick3.length}/3)</p>
+      </section>
+
+      {/* Pick 2 group */}
+      <section style={{ marginBottom: '30px' }}>
+        <h2 style={{ color: '#782F40' }}>Select 2 Other Patches</h2>
+        <p>Pick exactly two patches from the other categories (Locations, National Parks, Numbers, USA).</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          {pick2Items.map(item => {
+            const selected = isPick2Selected(item);
+            const disabled = !selected && selectedPick2.length >= 2;
+            return (
+              <div
+                key={item.productName}
+                onClick={() => !disabled && handleTogglePick2(item)}
+                style={{
+                  width: '150px',
+                  cursor: disabled ? 'default' : 'pointer',
+                  border: selected ? '2px solid #CEB888' : '1px solid #CEB888',
+                  borderRadius: '4px',
+                  padding: '5px',
+                  opacity: disabled && !selected ? 0.5 : 1
+                }}
+              >
+                <img
+                  src={transformImageUrl(item.imageUrl)}
+                  alt={item.productName}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/images/placeholder.png';
+                  }}
+                  style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                />
+                <p style={{ marginTop: '5px' }}>{item.productName}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p style={{ marginTop: '10px' }}>Selected ({selectedPick2.length}/2)</p>
+      </section>
+
+      {/* User Info */}
+      <section style={{ marginBottom: '30px' }}>
+        <h2 style={{ color: '#782F40' }}>Your Information</h2>
+        <div style={{ maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #CEB888' }}
+          />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #CEB888' }}
+          />
+          <textarea
+            placeholder="Shipping Address"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            rows={3}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #CEB888' }}
+          />
+        </div>
+      </section>
+
+      {/* Submit */}
+      <section>
+        <button
+          onClick={handleSubmit}
+          disabled={!readyToSubmit}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: readyToSubmit ? '#782F40' : '#ccc',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: readyToSubmit ? 'pointer' : 'default'
+          }}
+        >
+          Submit
+        </button>
+        {!readyToSubmit && (
+          <p style={{ marginTop: '10px', color: '#d32f2f' }}>
+            Please complete your selections (1 bag, 3 Bookstore patches, 2 other patches) and fill in your name, email and address.
+          </p>
         )}
-      </main>
+      </section>
     </div>
   );
 }
