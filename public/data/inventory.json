@@ -65,6 +65,198 @@
   },
   {
     "Selection Options": "Pick 5",
+    "Product Name": "Baseball Patch",
+    "Product Type": "Patch",
+    "Category": "Sports",
+    "URL": "https://hedigear.com/collections/sports/products/patch-sports-baseball",
+    "Image": "/images/Baseball Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Basketball Patch",
+    "Product Type": "Patch",
+    "Category": "Sports",
+    "URL": "https://hedigear.com/collections/sports/products/patch-sports-basketball",
+    "Image": "/images/Basketball Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Football Patch",
+    "Product Type": "Patch",
+    "Category": "Sports",
+    "URL": "https://hedigear.com/collections/sports/products/patch-sports-football",
+    "Image": "/images/Football Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Hockey Sticks Patch",
+    "Product Type": "Patch",
+    "Category": "Sports",
+    "URL": "https://hedigear.com/collections/sports/products/patch-sports-hockey-sticks",
+    "Image": "/images/Hockey Sticks Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Race Flags Patch",
+    "Product Type": "Patch",
+    "Category": "Sports",
+    "URL": "https://hedigear.com/collections/sports/products/patch-sports-race-flags",
+    "Image": "/images/Race Flags Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Books Patch",
+    "Product Type": "Patch",
+    "Category": "Hobbies",
+    "URL": "https://hedigear.com/collections/hobbies/products/patch-hobbies-books",
+    "Image": "/images/Books Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Choose Happy Patch",
+    "Product Type": "Patch",
+    "Category": "Hobbies",
+    "URL": "https://hedigear.com/collections/hobbies/products/patch-hobbies-choose-happy",
+    "Image": "/images/Choose Happy Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Gone Surfing Patch",
+    "Product Type": "Patch",
+    "Category": "Hobbies",
+    "URL": "https://hedigear.com/collections/hobbies/products/patch-hobbies-gone-surfing",
+    "Image": "/images/Gone Surfing Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Positive Energy Patch",
+    "Product Type": "Patch",
+    "Category": "Hobbies",
+    "URL": "https://hedigear.com/collections/hobbies/products/patch-hobbies-positive-energy",
+    "Image": "/images/Positive Energy Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Space Patch",
+    "Product Type": "Patch",
+    "Category": "Hobbies",
+    "URL": "https://hedigear.com/collections/hobbies/products/patch-hobbies-space-patch",
+    "Image": "/images/Space Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Drumstick Patch",
+    "Product Type": "Patch",
+    "Category": "Music",
+    "URL": "https://hedigear.com/collections/music/products/patch-music-drumstick",
+    "Image": "/images/Drumstick Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Guitar Patch",
+    "Product Type": "Patch",
+    "Category": "Music",
+    "URL": "https://hedigear.com/collections/music/products/patch-music-guitar",
+    "Image": "/images/Guitar Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "I Love Music Patch",
+    "Product Type": "Patch",
+    "Category": "Music",
+    "URL": "https://hedigear.com/collections/music/products/patch-music-i-love-music",
+    "Image": "/images/I Love Music Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Heart Patch",
+    "Product Type": "Patch",
+    "Category": "Shapes",
+    "URL": "https://hedigear.com/collections/shapes/products/patch-shapes-heart",
+    "Image": "/images/Heart Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Zero Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-zero",
+    "Image": "/images/Number Zero Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number One Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-one",
+    "Image": "/images/Number One Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Two Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-two",
+    "Image": "/images/Number Two Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Three Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-three",
+    "Image": "/images/Number Three Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Four Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-four",
+    "Image": "/images/Number Four Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Five Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-five",
+    "Image": "/images/Number Five Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Six Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-six",
+    "Image": "/images/Number Six Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Seven Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-seven",
+    "Image": "/images/Number Seven Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Eight Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-eight",
+    "Image": "/images/Number Eight Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Number Nine Patch",
+    "Product Type": "Patch",
+    "Category": "Numbers",
+    "URL": "https://hedigear.com/collections/numbers/products/patch-numbers-nine",
+    "Image": "/images/Number Nine Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
     "Product Name": "US Democrat Donkey Patch",
     "Product Type": "Patch",
     "Category": "USA",
@@ -110,5 +302,253 @@
     "Category": "USA",
     "URL": "https://hedigear.com/collections/usa/products/usa-hawaii-flag-name-patch",
     "Image": "/images/USA Hawaii Flag Name Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "USA Hawaii Peace",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/usa-hawaii-peace",
+    "Image": "/images/USA Hawaii Peace.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "USA Hawaii State Flag Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/usa-hawaii-state-flag-patch",
+    "Image": "/images/USA Hawaii State Flag Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "USA Red White & Blue Country Flag Patch (3.5 x 2)",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/usa-red-white-blue-country-flag-patch-3-5-x-2",
+    "Image": "/images/USA Red White & Blue Country Flag Patch (3.5 x 2).png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Tea Party Patch",
+    "Product Type": "Patch",
+    "Category": "USA",
+    "URL": "https://hedigear.com/collections/usa/products/tea-party-patch",
+    "Image": "/images/Tea Party Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Australia Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/australia-flag-mini-patch",
+    "Image": "/images/Australia Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "China Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/china-flag-mini-patch",
+    "Image": "/images/China Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Costa Rica Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/costa-rica-flag-mini-patch",
+    "Image": "/images/Costa Rica Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Cuba Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/cuba-flag-mini-patch",
+    "Image": "/images/Cuba Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Dominican Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/dominican-flag-mini-patch",
+    "Image": "/images/Dominican Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Great Britain Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/great-britain-flag-mini-patch",
+    "Image": "/images/Great Britain Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Japan Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/japan-flag-mini-patch",
+    "Image": "/images/Japan Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Mexico Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/mexico-flag-mini-patch",
+    "Image": "/images/Mexico Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Puerto Rico Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/puerto-rico-flag-mini-patch",
+    "Image": "/images/Puerto Rico Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Venezuela Flag Mini Patch",
+    "Product Type": "Patch",
+    "Category": "International",
+    "URL": "https://hedigear.com/collections/international/products/venezuela-flag-mini-patch",
+    "Image": "/images/Venezuela Flag Mini Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Acadia National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/acadia-national-park-hook-patch",
+    "Image": "/images/Acadia National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "American Samoa National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/american-samoa-national-park-hook-patch",
+    "Image": "/images/American Samoa National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Arches National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/arches-national-park-hook-patch",
+    "Image": "/images/Arches National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Badlands National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/badlands-national-park-hook-patch",
+    "Image": "/images/Badlands National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Big Bend National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/big-bend-national-park-hook-patch",
+    "Image": "/images/Big Bend National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Biscayne National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/biscayne-national-park-hook-patch",
+    "Image": "/images/Biscayne National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Black Canyon of the Gunnison National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/black-canyon-of-the-gunnison-national-park-hook-patch",
+    "Image": "/images/Black Canyon of the Gunnison National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Bryce Canyon National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/bryce-canyon-national-park-hook-patch",
+    "Image": "/images/Bryce Canyon National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Canyonland National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/canyonland-national-park-hook-patch",
+    "Image": "/images/Canyonland National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Capitol Reef National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/capitol-reef-national-park-hook-patch",
+    "Image": "/images/Capitol Reef National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Carlsbad Caverns National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/carlsbad-caverns-national-park-hook-patch",
+    "Image": "/images/Carlsbad Caverns National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Channel Islands National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/channel-islands-national-park-hook-patch",
+    "Image": "/images/Channel Islands National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Congaree National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/congaree-national-park-hook-patch",
+    "Image": "/images/Congaree National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Crater Lake National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/crater-lake-national-park-hook-patch",
+    "Image": "/images/Crater Lake National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Cuyahoga National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/cuyahoga-national-park-hook-patch",
+    "Image": "/images/Cuyahoga National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Death Valley National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/death-valley-national-park-hook-patch",
+    "Image": "/images/Death Valley National Park Hook Patch.png"
+  },
+  {
+    "Selection Options": "Pick 5",
+    "Product Name": "Denali National Park Hook Patch",
+    "Product Type": "Patch",
+    "Category": "Destinations",
+    "URL": "https://hedigear.com/collections/destinations/products/denali-national-park-hook-patch",
+    "Image": "/images/Denali National Park Hook Patch.png"
   }
 ]

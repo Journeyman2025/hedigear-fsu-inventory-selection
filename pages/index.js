@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
 import Head from 'next/head';
 
 // Main component for the inventory selection page
 export default function Home() {
-  // State variables
+  // State variables with clearer names
   const [inventory, setInventory] = useState([]);
-  const [selectedPick1, setSelectedPick1] = useState(null);
-  const [selectedPick2, setSelectedPick2] = useState([]);
+  const [selectedBackpack, setSelectedBackpack] = useState(null);
+  const [selectedPatches, setSelectedPatches] = useState([]);
   const [formVisible, setFormVisible] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,24 +25,34 @@ export default function Home() {
       .catch(err => console.error("Failed to fetch inventory:", err));
   }, []);
 
-  // Filter inventory into categories
-  const includedItems = inventory.filter(p => p['Selection Options'] === 'Included');
-  const pick1Items = inventory.filter(p => p['Selection Options'] === 'Pick 1');
-  const pick5Items = inventory.filter(p => p['Selection Options'] === 'Pick 5');
+  // Use more robust filtering based on Category and Product Type
+  const includedItems = useMemo(() => 
+    inventory.filter(p => p.Category === 'FSU Logo'),
+    [inventory]
+  );
+  const backpackItems = useMemo(() =>
+    inventory.filter(p => p['Product Type'] === 'HEDi-PACK'),
+    [inventory]
+  );
+  // This is the corrected, robust filtering logic that gets all selectable patches
+  const patchItems = useMemo(() =>
+    inventory.filter(p => p['Product Type'] === 'Patch' && p.Category !== 'FSU Logo'),
+    [inventory]
+  );
 
   // Handlers for selecting and deselecting items
-  const handleSelectPick1 = (item) => {
-    setSelectedPick1(item);
+  const handleSelectBackpack = (item) => {
+    setSelectedBackpack(item);
   };
 
-  const handleSelectPick2 = (item) => {
-    if (!selectedPick2.find(p => p['Product Name'] === item['Product Name']) && selectedPick2.length < campaignConfig.patchSelectionLimit) {
-      setSelectedPick2(prev => [...prev, item]);
+  const handleSelectPatch = (item) => {
+    if (!selectedPatches.find(p => p['Product Name'] === item['Product Name']) && selectedPatches.length < campaignConfig.patchSelectionLimit) {
+      setSelectedPatches(prev => [...prev, item]);
     }
   };
 
-  const handleDeselectPick2 = (item) => {
-    setSelectedPick2(prev => prev.filter(p => p['Product Name'] !== item['Product Name']));
+  const handleDeselectPatch = (item) => {
+    setSelectedPatches(prev => prev.filter(p => p['Product Name'] !== item['Product Name']));
   };
 
   // Handler for form input changes
@@ -59,17 +69,20 @@ export default function Home() {
   // Handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPick1 || selectedPick2.length !== campaignConfig.patchSelectionLimit) {
+    if (!selectedBackpack || selectedPatches.length !== campaignConfig.patchSelectionLimit) {
       alert(`Please make sure you have selected 1 backpack and ${campaignConfig.patchSelectionLimit} patches.`);
       return;
     }
     setSubmissionStatus('submitting');
+    
+    // Map state to the legacy names required by the Notion API
     const submissionData = {
       ...formData,
-      selectedPick1,
-      selectedPick2,
+      selectedPick1: selectedBackpack,
+      selectedPick2: selectedPatches,
       includedItems,
     };
+
     try {
       const response = await fetch('/api/submit-to-notion', {
         method: 'POST',
@@ -130,17 +143,17 @@ export default function Home() {
         <ProductGrid title="Included with Your HEDi-PACK" items={includedItems} />
         <ProductGrid 
           title="Step 1: Choose Your HEDi-PACK (Pick 1)" 
-          items={pick1Items} 
-          selectedItems={selectedPick1 ? [selectedPick1] : []}
-          onSelectItem={handleSelectPick1}
+          items={backpackItems} 
+          selectedItems={selectedBackpack ? [selectedBackpack] : []}
+          onSelectItem={handleSelectBackpack}
           isMultiSelect={false} 
         />
         <ProductGrid 
           title={`Step 2: Choose Your Patches (Pick ${campaignConfig.patchSelectionLimit})`} 
-          items={pick5Items} 
-          selectedItems={selectedPick2}
-          onSelectItem={handleSelectPick2}
-          onDeselectItem={handleDeselectPick2}
+          items={patchItems} 
+          selectedItems={selectedPatches}
+          onSelectItem={handleSelectPatch}
+          onDeselectItem={handleDeselectPatch}
           isMultiSelect={true}
         />
         {!formVisible && (
@@ -148,7 +161,7 @@ export default function Home() {
             <button 
               onClick={() => setFormVisible(true)}
               className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-              disabled={!selectedPick1 || selectedPick2.length !== campaignConfig.patchSelectionLimit}
+              disabled={!selectedBackpack || selectedPatches.length !== campaignConfig.patchSelectionLimit}
             >
               Proceed to Shipping
             </button>
