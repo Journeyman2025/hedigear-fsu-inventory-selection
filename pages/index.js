@@ -3,12 +3,12 @@ import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
 import Head from 'next/head';
 
 // This component is a direct adaptation of the working UF project's logic,
-// but updated for FSU's selection rules and Tailwind CSS styling.
+// updated for FSU's selection rules and Tailwind CSS styling.
 
 export default function Home() {
   const [inventory, setInventory] = useState([]);
   
-  // State for selections
+  // State for selections (mirrors the simple UF logic)
   const [selectedBackpack, setSelectedBackpack] = useState(null);
   const [selectedPatches, setSelectedPatches] = useState([]);
   
@@ -30,15 +30,20 @@ export default function Home() {
       .catch(err => console.error("Failed to fetch inventory:", err));
   }, []);
 
-  // Filter inventory into the correct groups
+  // Filter inventory into the correct groups using the FSU data keys
   const includedItems = inventory.filter(p => p['Selection Options'] === 'Included');
   const backpackItems = inventory.filter(p => p['Selection Options'] === 'Pick 1');
   const patchItems = inventory.filter(p => p['Selection Options'] === 'Pick 5');
 
-  // --- SELECTION HANDLERS (Adapted from UF logic) ---
+  // --- SELECTION HANDLERS (Directly adapted from UF logic) ---
 
   const handleSelectBackpack = (item) => {
-    setSelectedBackpack(item);
+    // UF logic allows toggling the backpack selection
+    if (selectedBackpack && selectedBackpack['Product Name'] === item['Product Name']) {
+      setSelectedBackpack(null);
+    } else {
+      setSelectedBackpack(item);
+    }
   };
 
   const handleTogglePatches = (item) => {
@@ -52,12 +57,7 @@ export default function Home() {
       setSelectedPatches([...selectedPatches, item]);
     }
   };
-
-  // Helper to check if a patch is selected
-  const isPatchSelected = (item) => {
-    return selectedPatches.some(p => p['Product Name'] === item['Product Name']);
-  };
-
+  
   // --- FORM HANDLERS ---
 
   const handleInputChange = (e) => {
@@ -74,10 +74,11 @@ export default function Home() {
     e.preventDefault();
     setSubmissionStatus('submitting');
     
+    // The Notion API expects selectedPick1 and selectedPick2
     const submissionData = {
       ...formData,
       selectedPick1: selectedBackpack,
-      selectedPick2: selectedPatches, // Corresponds to 'Other Patches' in Notion
+      selectedPick2: selectedPatches, 
       includedItems,
     };
 
@@ -95,39 +96,10 @@ export default function Home() {
     }
   };
 
-  // --- RENDER LOGIC ---
-
   // Determine if the "Proceed" button should be enabled
   const isSelectionComplete = selectedBackpack && selectedPatches.length === campaignConfig.patchSelectionLimit;
 
-  // Reusable component for the product grid
-  const ProductGrid = ({ title, items, selectedItems, onToggle, selectionLimit, isMultiSelect }) => {
-    return (
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{title}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {items.map((item) => {
-            const isSelected = isMultiSelect 
-              ? selectedItems.some(p => p['Product Name'] === item['Product Name'])
-              : selectedItems && selectedItems['Product Name'] === item['Product Name'];
-            
-            const isDisabled = isMultiSelect && !isSelected && selectedItems.length >= selectionLimit;
-
-            return (
-              <div
-                key={item['Product Name']}
-                className={`border rounded-lg p-4 text-center transition-all duration-200 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
-                onClick={() => !isDisabled && onToggle(item)}
-              >
-                <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
-                <p className="text-sm font-semibold">{item['Product Name']}</p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+  // --- RENDER LOGIC ---
 
   if (submissionStatus === 'success') {
     return (
@@ -150,22 +122,61 @@ export default function Home() {
         <p className="text-lg mt-2">{campaignConfig.subheader}</p>
       </header>
       <main className="container mx-auto p-8">
-        <ProductGrid title="Included with Your HEDi-PACK" items={includedItems} />
-        <ProductGrid 
-          title="Step 1: Choose Your HEDi-PACK (Pick 1)" 
-          items={backpackItems} 
-          selectedItems={selectedBackpack}
-          onToggle={handleSelectBackpack}
-          isMultiSelect={false}
-        />
-        <ProductGrid 
-          title={`Step 2: Choose Your Patches (Pick ${campaignConfig.patchSelectionLimit})`} 
-          items={patchItems} 
-          selectedItems={selectedPatches}
-          onToggle={handleTogglePatches}
-          selectionLimit={campaignConfig.patchSelectionLimit}
-          isMultiSelect={true}
-        />
+        {/* Included Items Section */}
+        <div className="mb-12">
+            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">Included with Your HEDi-PACK</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {includedItems.map((item) => (
+                    <div key={item['Product Name']} className="border rounded-lg p-4 text-center">
+                        <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
+                        <p className="text-sm font-semibold">{item['Product Name']}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* Backpack Selection Section */}
+        <div className="mb-12">
+            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">Step 1: Choose Your HEDi-PACK (Pick 1)</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {backpackItems.map((item) => {
+                    const isSelected = selectedBackpack && selectedBackpack['Product Name'] === item['Product Name'];
+                    return (
+                        <div
+                            key={item['Product Name']}
+                            className={`border rounded-lg p-4 text-center transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
+                            onClick={() => handleSelectBackpack(item)}
+                        >
+                            <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
+                            <p className="text-sm font-semibold">{item['Product Name']}</p>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+
+        {/* Patch Selection Section */}
+        <div className="mb-12">
+            <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{`Step 2: Choose Your Patches (${selectedPatches.length}/${campaignConfig.patchSelectionLimit})`}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {patchItems.map((item) => {
+                    const isSelected = selectedPatches.some(p => p['Product Name'] === item['Product Name']);
+                    const isDisabled = !isSelected && selectedPatches.length >= campaignConfig.patchSelectionLimit;
+                    return (
+                        <div
+                            key={item['Product Name']}
+                            className={`border rounded-lg p-4 text-center transition-all duration-200 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
+                            onClick={() => !isDisabled && handleTogglePatches(item)}
+                        >
+                            <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
+                            <p className="text-sm font-semibold">{item['Product Name']}</p>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+
+        {/* Form and Submission Section */}
         {!formVisible && (
           <div className="text-center my-8">
             <button 
