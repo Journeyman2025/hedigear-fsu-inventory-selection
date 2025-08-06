@@ -17,25 +17,12 @@ export default function Home() {
     shippingAddress: { street: '', apt: '', city: '', state: '', zip: '' },
   });
 
-  // --- DEBUGGING: Log state whenever it changes ---
-  useEffect(() => {
-    console.log("DEBUG: Backpack selection changed:", selectedPick1);
-  }, [selectedPick1]);
-
-  useEffect(() => {
-    console.log("DEBUG: Patch selection changed. Count:", selectedPick2.length);
-  }, [selectedPick2]);
-
   // Fetch inventory data on component mount
   useEffect(() => {
-    console.log("DEBUG: Fetching inventory data...");
     fetch('/data/inventory.json')
       .then((res) => res.json())
-      .then((data) => {
-        console.log("DEBUG: Inventory data loaded successfully.");
-        setInventory(data);
-      })
-      .catch(err => console.error("DEBUG: Failed to fetch or parse inventory.json", err));
+      .then((data) => setInventory(data))
+      .catch(err => console.error("Failed to fetch inventory:", err));
   }, []);
 
   // Filter inventory into categories
@@ -43,23 +30,18 @@ export default function Home() {
   const pick1Items = inventory.filter(p => p['Selection Options'] === 'Pick 1');
   const pick5Items = inventory.filter(p => p['Selection Options'] === 'Pick 5');
 
-  // --- DEBUGGING: Add logs to handlers ---
+  // Handlers for selecting and deselecting items
   const handleSelectPick1 = (item) => {
-    console.log("DEBUG: handleSelectPick1 called with:", item['Product Name']);
     setSelectedPick1(item);
   };
 
   const handleSelectPick2 = (item) => {
-    console.log("DEBUG: handleSelectPick2 called with:", item['Product Name']);
     if (!selectedPick2.find(p => p['Product Name'] === item['Product Name']) && selectedPick2.length < campaignConfig.patchSelectionLimit) {
       setSelectedPick2(prev => [...prev, item]);
-    } else {
-      console.log("DEBUG: Selection prevented: item already selected or limit reached.");
     }
   };
 
   const handleDeselectPick2 = (item) => {
-    console.log("DEBUG: handleDeselectPick2 called with:", item['Product Name']);
     setSelectedPick2(prev => prev.filter(p => p['Product Name'] !== item['Product Name']));
   };
 
@@ -97,6 +79,7 @@ export default function Home() {
       if (response.ok) setSubmissionStatus('success');
       else setSubmissionStatus('error');
     } catch (error) {
+      console.error("Submission error:", error);
       setSubmissionStatus('error');
     }
   };
@@ -112,10 +95,7 @@ export default function Home() {
             <div
               key={item['Product Name']}
               className={`border rounded-lg p-4 text-center cursor-pointer transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
-              onClick={() => {
-                console.log("DEBUG: Clicked on", item['Product Name']);
-                isMultiSelect ? (isSelected ? onDeselectItem(item) : onSelectItem(item)) : onSelectItem(item);
-              }}
+              onClick={() => isMultiSelect ? (isSelected ? onDeselectItem(item) : onSelectItem(item)) : onSelectItem(item)}
             >
               <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
               <p className="text-sm font-semibold">{item['Product Name']}</p>
