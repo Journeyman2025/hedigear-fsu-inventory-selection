@@ -1,13 +1,18 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
 import Head from 'next/head';
 
-// Main component for the inventory selection page
+// This component is a direct adaptation of the working UF project's logic,
+// but updated for FSU's selection rules and Tailwind CSS styling.
+
 export default function Home() {
-  // State variables with clearer names
   const [inventory, setInventory] = useState([]);
+  
+  // State for selections
   const [selectedBackpack, setSelectedBackpack] = useState(null);
   const [selectedPatches, setSelectedPatches] = useState([]);
+  
+  // State for the form
   const [formVisible, setFormVisible] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,37 +30,36 @@ export default function Home() {
       .catch(err => console.error("Failed to fetch inventory:", err));
   }, []);
 
-  // Use more robust filtering based on Category and Product Type
-  const includedItems = useMemo(() => 
-    inventory.filter(p => p.Category === 'FSU Logo'),
-    [inventory]
-  );
-  const backpackItems = useMemo(() =>
-    inventory.filter(p => p['Product Type'] === 'HEDi-PACK'),
-    [inventory]
-  );
-  // This is the corrected, robust filtering logic that gets all selectable patches
-  const patchItems = useMemo(() =>
-    inventory.filter(p => p['Product Type'] === 'Patch' && p.Category !== 'FSU Logo'),
-    [inventory]
-  );
+  // Filter inventory into the correct groups
+  const includedItems = inventory.filter(p => p['Selection Options'] === 'Included');
+  const backpackItems = inventory.filter(p => p['Selection Options'] === 'Pick 1');
+  const patchItems = inventory.filter(p => p['Selection Options'] === 'Pick 5');
 
-  // Handlers for selecting and deselecting items
+  // --- SELECTION HANDLERS (Adapted from UF logic) ---
+
   const handleSelectBackpack = (item) => {
     setSelectedBackpack(item);
   };
 
-  const handleSelectPatch = (item) => {
-    if (!selectedPatches.find(p => p['Product Name'] === item['Product Name']) && selectedPatches.length < campaignConfig.patchSelectionLimit) {
-      setSelectedPatches(prev => [...prev, item]);
+  const handleTogglePatches = (item) => {
+    const isSelected = selectedPatches.some(p => p['Product Name'] === item['Product Name']);
+    
+    if (isSelected) {
+      // If already selected, remove it
+      setSelectedPatches(selectedPatches.filter(p => p['Product Name'] !== item['Product Name']));
+    } else if (selectedPatches.length < campaignConfig.patchSelectionLimit) {
+      // If not selected and limit is not reached, add it
+      setSelectedPatches([...selectedPatches, item]);
     }
   };
 
-  const handleDeselectPatch = (item) => {
-    setSelectedPatches(prev => prev.filter(p => p['Product Name'] !== item['Product Name']));
+  // Helper to check if a patch is selected
+  const isPatchSelected = (item) => {
+    return selectedPatches.some(p => p['Product Name'] === item['Product Name']);
   };
 
-  // Handler for form input changes
+  // --- FORM HANDLERS ---
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name.includes('.')) {
@@ -66,20 +70,14 @@ export default function Home() {
     }
   };
 
-  // Handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedBackpack || selectedPatches.length !== campaignConfig.patchSelectionLimit) {
-      alert(`Please make sure you have selected 1 backpack and ${campaignConfig.patchSelectionLimit} patches.`);
-      return;
-    }
     setSubmissionStatus('submitting');
     
-    // Map state to the legacy names required by the Notion API
     const submissionData = {
       ...formData,
       selectedPick1: selectedBackpack,
-      selectedPick2: selectedPatches,
+      selectedPick2: selectedPatches, // Corresponds to 'Other Patches' in Notion
       includedItems,
     };
 
@@ -97,27 +95,39 @@ export default function Home() {
     }
   };
 
-  // Reusable component for rendering a grid of products
-  const ProductGrid = ({ title, items, selectedItems, onSelectItem, onDeselectItem, isMultiSelect }) => (
-    <div className="mb-12">
-      <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{title}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {items.map((item) => {
-          const isSelected = selectedItems?.some(p => p['Product Name'] === item['Product Name']);
-          return (
-            <div
-              key={item['Product Name']}
-              className={`border rounded-lg p-4 text-center cursor-pointer transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
-              onClick={() => isMultiSelect ? (isSelected ? onDeselectItem(item) : onSelectItem(item)) : onSelectItem(item)}
-            >
-              <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
-              <p className="text-sm font-semibold">{item['Product Name']}</p>
-            </div>
-          );
-        })}
+  // --- RENDER LOGIC ---
+
+  // Determine if the "Proceed" button should be enabled
+  const isSelectionComplete = selectedBackpack && selectedPatches.length === campaignConfig.patchSelectionLimit;
+
+  // Reusable component for the product grid
+  const ProductGrid = ({ title, items, selectedItems, onToggle, selectionLimit, isMultiSelect }) => {
+    return (
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{title}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {items.map((item) => {
+            const isSelected = isMultiSelect 
+              ? selectedItems.some(p => p['Product Name'] === item['Product Name'])
+              : selectedItems && selectedItems['Product Name'] === item['Product Name'];
+            
+            const isDisabled = isMultiSelect && !isSelected && selectedItems.length >= selectionLimit;
+
+            return (
+              <div
+                key={item['Product Name']}
+                className={`border rounded-lg p-4 text-center transition-all duration-200 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}`}
+                onClick={() => !isDisabled && onToggle(item)}
+              >
+                <img src={item.Image || '/images/placeholder.png'} alt={item['Product Name']} className="w-full h-48 object-contain mb-4" />
+                <p className="text-sm font-semibold">{item['Product Name']}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (submissionStatus === 'success') {
     return (
@@ -144,16 +154,16 @@ export default function Home() {
         <ProductGrid 
           title="Step 1: Choose Your HEDi-PACK (Pick 1)" 
           items={backpackItems} 
-          selectedItems={selectedBackpack ? [selectedBackpack] : []}
-          onSelectItem={handleSelectBackpack}
-          isMultiSelect={false} 
+          selectedItems={selectedBackpack}
+          onToggle={handleSelectBackpack}
+          isMultiSelect={false}
         />
         <ProductGrid 
           title={`Step 2: Choose Your Patches (Pick ${campaignConfig.patchSelectionLimit})`} 
           items={patchItems} 
           selectedItems={selectedPatches}
-          onSelectItem={handleSelectPatch}
-          onDeselectItem={handleDeselectPatch}
+          onToggle={handleTogglePatches}
+          selectionLimit={campaignConfig.patchSelectionLimit}
           isMultiSelect={true}
         />
         {!formVisible && (
@@ -161,7 +171,7 @@ export default function Home() {
             <button 
               onClick={() => setFormVisible(true)}
               className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-              disabled={!selectedBackpack || selectedPatches.length !== campaignConfig.patchSelectionLimit}
+              disabled={!isSelectionComplete}
             >
               Proceed to Shipping
             </button>
