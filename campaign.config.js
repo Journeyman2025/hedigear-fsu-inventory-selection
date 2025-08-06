@@ -1,6 +1,6 @@
-// hediger-fsu-inventory-selection/campaign.config.js
+// campaign.config.js
 
-const campaignConfig = {
+export const CAMPAIGN_CONFIG = {
   campaignName: 'Florida State University NIL 2025',
   owner: 'HEDi-GEAR',
   // The main page title
@@ -15,8 +15,10 @@ const campaignConfig = {
   favicon: '/brand/fsu-instagram-logo.jpg',
   // The number of patches that can be selected
   patchSelectionLimit: 5,
+  // The colors used in _app.js to set CSS variables
+  primaryColor: '#782F40', // FSU Garnet
+  secondaryColor: '#CEB888', // FSU Gold
   // The Notion database ID
-  // IMPORTANT: You will likely need to create a new Notion database for FSU submissions and add the new ID here.
   notionDatabaseId: process.env.NOTION_DATABASE_ID || '',
   // The property names in your Notion database
   notionProperties: {
@@ -27,5 +29,3 @@ const campaignConfig = {
     campaign: 'Campaign',
   },
 };
-
-module.exports = campaignConfig;
