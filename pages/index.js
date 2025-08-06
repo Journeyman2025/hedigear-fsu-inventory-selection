@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
-// This import line is the only change needed.
-// It now correctly imports the named export and renames it for use in this file.
 import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
+import Head from 'next/head';
 
 // Main component for the inventory selection page
 export default function Home() {
   // State variables to hold inventory data and user selections
   const [inventory, setInventory] = useState([]);
   const [selectedPick1, setSelectedPick1] = useState(null); // For backpack
-  const [selectedPick5, setSelectedPick5] = useState([]);   // For patches
+  const [selectedPick2, setSelectedPick2] = useState([]);   // For patches - CORRECTED
   const [formVisible, setFormVisible] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting', 'success', 'error'
   const [formData, setFormData] = useState({
@@ -43,15 +42,15 @@ export default function Home() {
     setSelectedPick1(item);
   };
 
-  const handleSelectPick5 = (item) => {
+  const handleSelectPick2 = (item) => { // CORRECTED
     // Add item if not already selected and limit is not reached
-    if (!selectedPick5.find(p => p['Product Name'] === item['Product Name']) && selectedPick5.length < campaignConfig.patchSelectionLimit) {
-      setSelectedPick5([...selectedPick5, item]);
+    if (!selectedPick2.find(p => p['Product Name'] === item['Product Name']) && selectedPick2.length < campaignConfig.patchSelectionLimit) {
+      setSelectedPick2([...selectedPick2, item]);
     }
   };
 
-  const handleDeselectPick5 = (item) => {
-    setSelectedPick5(selectedPick5.filter(p => p['Product Name'] !== item['Product Name']));
+  const handleDeselectPick2 = (item) => { // CORRECTED
+    setSelectedPick2(selectedPick2.filter(p => p['Product Name'] !== item['Product Name']));
   };
 
   // Handler for form input changes
@@ -71,7 +70,7 @@ export default function Home() {
   // Handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPick1 || selectedPick5.length !== campaignConfig.patchSelectionLimit) {
+    if (!selectedPick1 || selectedPick2.length !== campaignConfig.patchSelectionLimit) { // CORRECTED
       alert(`Please make sure you have selected 1 backpack and ${campaignConfig.patchSelectionLimit} patches.`);
       return;
     }
@@ -82,7 +81,7 @@ export default function Home() {
     const submissionData = {
       ...formData,
       selectedPick1: selectedPick1, 
-      selectedPick2: selectedPick5, // Keep name for Notion API
+      selectedPick2: selectedPick2, // CORRECTED - No more mapping needed
       includedItems: includedItems
     };
 
@@ -142,6 +141,10 @@ export default function Home() {
   // Render the main page content
   return (
     <div>
+      <Head>
+        <title>{campaignConfig.title}</title>
+        <link rel="icon" href={campaignConfig.favicon} />
+      </Head>
       <header className="bg-gray-800 text-white p-6 text-center">
         <img src={campaignConfig.logo} alt="Campaign Logo" className="h-20 mx-auto mb-4" />
         <h1 className="text-4xl font-extrabold">{campaignConfig.header}</h1>
@@ -165,9 +168,9 @@ export default function Home() {
         <ProductGrid 
           title={`Step 2: Choose Your Patches (Pick ${campaignConfig.patchSelectionLimit})`} 
           items={pick5Items} 
-          selectedItems={selectedPick5}
-          onSelectItem={handleSelectPick5}
-          onDeselectItem={handleDeselectPick5}
+          selectedItems={selectedPick2} // CORRECTED
+          onSelectItem={handleSelectPick2} // CORRECTED
+          onDeselectItem={handleDeselectPick2} // CORRECTED
           isMultiSelect={true}
         />
         
@@ -177,7 +180,7 @@ export default function Home() {
             <button 
               onClick={() => setFormVisible(true)}
               className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-              disabled={!selectedPick1 || selectedPick5.length !== campaignConfig.patchSelectionLimit}
+              disabled={!selectedPick1 || selectedPick2.length !== campaignConfig.patchSelectionLimit} // CORRECTED
             >
               Proceed to Shipping
             </button>
