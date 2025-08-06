@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import campaignConfig from '../campaign.config';
+// This import line is the only change needed.
+// It now correctly imports the named export and renames it for use in this file.
+import { CAMPAIGN_CONFIG as campaignConfig } from '../campaign.config';
 
 // Main component for the inventory selection page
 export default function Home() {
@@ -76,11 +78,12 @@ export default function Home() {
     
     setSubmissionStatus('submitting');
     
+    // Combine all selections for submission
     const submissionData = {
       ...formData,
-      selectedPick1,
-      selectedPick5, // We now use selectedPick5
-      includedItems
+      selectedPick1: selectedPick1, 
+      selectedPick2: selectedPick5, // Keep name for Notion API
+      includedItems: includedItems
     };
 
     try {
@@ -104,7 +107,7 @@ export default function Home() {
   };
 
   // A reusable component for rendering a grid of products
-  const ProductGrid = ({ title, items, selectedItems, onSelectItem, onDeselectItem, selectionLimit, isMultiSelect }) => (
+  const ProductGrid = ({ title, items, selectedItems, onSelectItem, onDeselectItem, isMultiSelect }) => (
     <div className="mb-12">
       <h2 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">{title}</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
