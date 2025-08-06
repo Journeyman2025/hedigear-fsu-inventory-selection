@@ -9,9 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // You can define custom FSU colors here if you want
-        primary: '#782F40', // Example: FSU Garnet
-        accent: '#CEB888',  // Example: FSU Gold
+        // The property names must be exact
+        primaryColor: '#782F40', // Renamed from primary
+        accentColor: '#CEB888',   // Renamed from accent
       },
     },
   },
